@@ -25,71 +25,54 @@ common common-options
                , time ^>=1.12
                , uuid ^>=1.3
 
-library escalating-esqueleto-lib
+library
   import: common-options
-  ghc-options: -Wall -Werror -fdefer-typed-holes
   default-language: Haskell2010
-  hs-source-dirs: lib
+  hs-source-dirs: src/lib, src/exercises, src/answers, src/test
   exposed-modules: Schema
                  , Types
+                 , Exercises
+                 , Answers
+                 , EE0_StartingOut
+                 , EE1_Select
+                 , EE2_Join
+                 , EE3_TypeZoo
+                 , EE4_Errors
+                 , EE0a_iWantToLearnEsqueleto
+                 , EE1a_allFlavors
+                 , EE1b_allFlavorNameValues
+                 , EE1c_allFlavorNames
+                 , EE1d_dairyFreeFlavors
+                 , EE1e_flavorIdsFromNames
+                 , EE1f_customersWithoutBirthdaysWithFlavors
+                 , EE2a_favoriteFlavors
+                 , EE2b_flavorPopularity
+                 , EE2c_largestGroup
+                 , EE2d_customerGroups
+                 , EE3a_runDB
+                 , EE3b_select
+                 , EE3c_val
+                 , EE3d_orderBy
+                 , EE3e_project
+                 , EE3f_leftJoin
+                 , EE4a_getChocolate
+                 , EE4b_flavorNames
+                 , EE4c_flavorNameValues
+                 , EE4d_mostPopularFlavor
+                 , EE4e_customerPurchases
+                 , Main
   other-modules: DerivePostgresEnumTH
-
-library escalating-esqueleto-exercises
-  import: common-options
-  default-language: Haskell2010
-  hs-source-dirs: exercises
-  exposed-modules: Exercises
-  build-depends: escalating-esqueleto-lib
-  other-modules: EE0_StartingOut
-               , EE1_Select
-               , EE2_Join
-               , EE3_TypeZoo
-               , EE4_Errors
   default-extensions: TypeApplications
                     , OverloadedRecordDot
                     , OverloadedStrings
                     , PartialTypeSignatures
-
-library escalating-esqueleto-answers
-  import: common-options
-  default-language: Haskell2010
-  ghc-options: -Wall -Werror -fdefer-typed-holes
-  hs-source-dirs: answers
-  exposed-modules: Answers
-  build-depends: escalating-esqueleto-lib
-  default-extensions: TypeApplications
-                    , OverloadedRecordDot
-                    , OverloadedStrings
-  other-modules: EE0a_iWantToLearnEsqueleto
-               , EE1a_allFlavors
-               , EE1b_allFlavorNameValues
-               , EE1c_allFlavorNames
-               , EE1d_dairyFreeFlavors
-               , EE1e_flavorIdsFromNames
-               , EE1f_customersWithoutBirthdaysWithFlavors
-               , EE2a_favoriteFlavors
-               , EE2b_flavorPopularity
-               , EE2c_largestGroup
-               , EE2d_customerGroups
-               , EE3a_runDB
-               , EE3b_select
-               , EE3c_val
-               , EE3d_orderBy
-               , EE3e_project
-               , EE3f_leftJoin
-               , EE4a_getChocolate
-               , EE4b_flavorNames
-               , EE4c_flavorNameValues
-               , EE4d_mostPopularFlavor
-               , EE4e_customerPurchases
+  build-depends: hspec ^>=2.11
 
 test-suite escalating-esqueleto-test
   import:           common-options
   default-language: Haskell2010
   type:             exitcode-stdio-1.0
-  hs-source-dirs:   test
+  hs-source-dirs:   src/test
   main-is:          Main.hs
-  build-depends:    escalating-esqueleto-lib
-                  , escalating-esqueleto-exercises
-                  , escalating-esqueleto-answers
+  build-depends:    escalating-esqueleto
                   , hspec ^>=2.11

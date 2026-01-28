@@ -32,6 +32,7 @@
               (pkgs.haskell-language-server.override { supportedGhcVersions = [ "96" ]; })
               pkgs.postgresql
               pkgs.fswatch
+              pkgs.ghciwatch
             ];
             shellHook = ''
               export PGDATA=$PWD/.postgres

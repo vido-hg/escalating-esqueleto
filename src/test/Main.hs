@@ -13,11 +13,11 @@ import Test.Hspec
 
 main :: IO ()
 main = hspec $ do
-  describe "EE0_StartingOut" $ do
+  fdescribe "EE0_StartingOut" $ do
     it "a_iWantToLearnEsqueleto" $ do
       Exercise.a_iWantToLearnEsqueleto `shouldBe` Answer.a_iWantToLearnEsqueleto
 
-  describe "EE1_Select" $ do
+  fdescribe "EE1_Select" $ do
     it "a_allFlavors" $ do
       Exercise.a_allFlavors `shouldMatchListRunDB` Answer.a_allFlavors
 
@@ -37,7 +37,7 @@ main = hspec $ do
     it "f_customersWithoutBirthdaysWithFlavors" $ do
       Exercise.f_customersWithoutBirthdaysWithFlavors `shouldMatchListRunDB` Answer.f_customersWithoutBirthdaysWithFlavors
 
-  describe "EE2_Join" $ do
+  fdescribe "EE2_Join" $ do
     it "a_favoriteFlavors" $ do
       Exercise.a_favoriteFlavors `shouldMatchListRunDB` Answer.a_favoriteFlavors
 
