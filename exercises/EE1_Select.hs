@@ -1,7 +1,7 @@
 {- HLINT ignore "Use camelCase" -}
 module EE1_Select where
 
-import Data.Coerce (coerce)
+-- import Data.Coerce (coerce)
 import Data.Text (Text)
 import Database.Esqueleto.Experimental
 import Schema
@@ -25,7 +25,7 @@ to see if there's any difference
 -}
 a_allFlavors :: DB [Entity Flavor]
 a_allFlavors = do
-  _
+  select $ from $ table @Flavor
 
 {-
 Actually I just want the flavor name values. That would be:
@@ -35,7 +35,10 @@ Ensure you do this flavor->name projection in SQL, not after the fact in Haskell
 -}
 b_allFlavorNameValues :: DB [Value Text]
 b_allFlavorNameValues = do
-  _
+  select $ do
+    flavor <- from $ table @Flavor
+    pure flavor.name
+-- $> :t select
 
 {-
 Both queries above return lists of wrapped types. 'Entity' comes from persistent,
@@ -46,7 +49,10 @@ plain '[Text]'? Start by copying the previous query.
 -}
 c_allFlavorNames :: DB [Text]
 c_allFlavorNames = do
-  _
+  val <- select $ do
+    flavor <- from $ table @Flavor
+    pure flavor.name
+  pure (map unValue val)
 
 {-
 Let's introduce WHERE clauses.
@@ -54,7 +60,10 @@ A vegan just walked in. Provide all our dairy-free flavors.
 -}
 d_dairyFreeFlavors :: DB [Entity Flavor]
 d_dairyFreeFlavors = do
-  _
+  select $ do
+    flavor <- from $ table @Flavor
+    where_ (flavor.dairyFree ==. val True)
+    pure flavor
 
 {-
 It's often convenient to look up FlavorIds from flavor names. For example:
@@ -65,7 +74,11 @@ Write a query that can take an argument of a list of flavor names, and get their
 -}
 e_flavorIdsFromNames :: [Text] -> DB [FlavorId]
 e_flavorIdsFromNames flavorNames = do
-  _
+  vals <- select $ do
+    flavor <- from $ table @Flavor
+    where_ (flavor.name `in_` valList flavorNames)
+    pure flavor.id
+  pure (map unValue vals)
 
 {-
 We'd like to run a mildly nefarious targeted ad campaign. What are the emails
@@ -73,7 +86,17 @@ of all our customers who haven't provided their birthday, but have
 provided a favorite flavor?
 
 Fill in the type as well.
+
+SELECT customers.email
+FROM customers
+WHERE customers.birthday IS NULL AND customers.favorite_flavor_id IS NOT NULL;
+
 -}
-f_customersWithoutBirthdaysWithFlavors :: _
+
+f_customersWithoutBirthdaysWithFlavors :: DB [Email]
 f_customersWithoutBirthdaysWithFlavors = do
-  _
+  val <- select $ do
+    customer <- from $ table @Customer
+    where_ (isNothing customer.birthday &&. not_ (isNothing customer.favoriteFlavor))
+    pure customer.email
+  pure (map unValue val)
