@@ -23,14 +23,15 @@ a_getChocolate :: DB (Maybe (Entity Flavor))
 a_getChocolate = do
   selectOne $ do
     flavor <- from $ table @Flavor
-    where_ $ flavor.name == "Chunky Chocolate"
+    where_ $ flavor.name ==. val "Chunky Chocolate" -- wrap in sqlexpr
     pure flavor
 
 b_flavorNames :: DB [Text]
 b_flavorNames = do
-  select $ do
+  valB <- select $ do
     flavor <- from $ table @Flavor
-    pure $ unValue flavor.name
+    pure $ flavor.name
+  pure (map unValue valB)
 
 -- also check out the error message in this version of the last exercise:
 -- b2_flavorNames :: DB [Text]
@@ -41,22 +42,26 @@ b_flavorNames = do
 
 c_flavorNameValues :: DB [Value Text]
 c_flavorNameValues = do
-  flavors <- select $ from $ table @Flavor
-  pure $ map (\f -> f.name) flavors
+  select $ do
+    flavors <- from $ table @Flavor
+    pure $ flavors.name
 
 d_mostPopularFlavor :: DB (Maybe FlavorId)
 d_mostPopularFlavor = do
-  selectOne $ do
+  valD <- selectOne $ do -- selOne similar to sel but wrap res in maybe
     (_customer :& flavor) <- from $
       table @Customer `innerJoin` table @Flavor
-      `on` (\(customer :& flavor) -> customer.favoriteFlavor ==. flavor.id)
+      `on` (\(customer :& flavor) -> customer.favoriteFlavor ==. just flavor.id)
     groupBy flavor.id
-    orderBy [desc countRows]
+    orderBy [desc (countRows :: SqlExpr (Value Int))]
     pure flavor.id
+  pure $ coerce valD
 
 e_customerPurchases :: DB [(CustomerId, Dollar)]
 e_customerPurchases = do
   fmap coerce $ select $ do
     purchase <- from $ table @Purchase
-    groupBy purchase.customerId
-    pure (purchase.customerId, purchase.amount)
+    groupBy (purchase.customerId)
+    -- let total = coalesceDefault [sum_ (purchase.amount)] (val 0)
+    pure (purchase.customerId, coalesceDefault [sum_ (purchase.amount)] $ val (0.0 :: Dollar))
+  -- pure [(unValue cid, unValue total) | (cid,total) <- valE]
