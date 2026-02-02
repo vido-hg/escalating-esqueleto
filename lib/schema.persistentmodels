@@ -1,0 +1,48 @@
+Flavor sql=flavors
+  Id UUID default=uuid_generate_v1mc
+  name Text Unique
+  UniqueFlavorName name
+  dairyFree Bool
+  createdAt UTCTime MigrationOnly
+  updatedAt UTCTime MigrationOnly
+  deriving Eq Show
+
+Customer sql=customers
+  Id UUID default=uuid_generate_v1mc
+  name Text
+  email Email Unique
+  UniqueCustomerEmail email
+  birthday Day Maybe
+  favoriteFlavor FlavorId Maybe
+  createdAt UTCTime MigrationOnly
+  updatedAt UTCTime MigrationOnly
+  deriving Eq Show
+
+Purchase sql=purchases !allColumnsImmutableByDefault
+  Id UUID default=uuid_generate_v1mc
+  customerId CustomerId
+  amount Dollar
+  purchaseKind PurchaseKind -- Cash | Credit | Debit | ACH | Wire
+  notes Value Maybe sqltype=jsonb -- 'Value' here is from Aeson, not Esqueleto
+  createdAt UTCTime
+  updatedAt UTCTime MigrationOnly
+  deriving Eq Show
+
+-- Allows connecting customers together via a CustomerLink
+CustomerGroupParent sql=customer_group_parents
+  Id UUID default=uuid_generate_v1mc()
+  name Text
+  createdAt UTCTime MigrationOnly
+  updatedAt UTCTime MigrationOnly
+  deriving Eq Show
+
+-- Connects customers to the groups they're a part of
+-- CustomerGroupParent is many-to-many with Customer via CustomerLink
+CustomerLink sql=customer_links
+  Id UUID default=uuid_generate_v1mc()
+  parentId CustomerGroupParentId OnDeleteCascade
+  customerId CustomerId OnDeleteCascade
+  UniqueCustomerLinkParentIdCustomerId parentId customerId
+  createdAt UTCTime MigrationOnly
+  updatedAt UTCTime MigrationOnly
+  deriving Eq Show
