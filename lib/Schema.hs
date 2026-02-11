@@ -26,4 +26,4 @@ import Types
 -- This uses Template Haskell to load in the schema.persistentmodels file
 -- It creates Haskell types from the models listed there
 share [mkPersist sqlSettings]
-  $(persistFileWith lowerCaseSettings "src/lib/schema.persistentmodels")
+  $(persistFileWith lowerCaseSettings "lib/schema.persistentmodels")

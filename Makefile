@@ -18,10 +18,10 @@ psql:
 
 # simple filewatcher that reruns `cabal test` on changes
 watch:
-	fswatch -o src/* | (while read -r event; do cabal test; done)
+	fswatch -o exercises/* lib/* answers/* test/* | (while read -r event; do cabal test; done)
 
 # close feedback loop with ghciwatch
 ghciwatch:
-	ghciwatch --watch src --enable-eval --clear --error-file ghcid.txt --test-ghci Main.main --command "cabal repl --repl-no-load"
+	ghciwatch --watch exercises --watch lib --watch answers --watch test --enable-eval --clear --error-file ghcid.txt --test-ghci Main.main --command "cabal repl"
 
 .PHONY: test watch ghciwatch

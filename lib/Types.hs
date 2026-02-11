@@ -113,9 +113,9 @@ mkEmail t = if t =~ emailRegex
 instance PersistField Email where
   toPersistValue email = PersistLiteral_ Escaped $ TE.encodeUtf8 $ emailToText email
   fromPersistValue (PersistLiteral_ Escaped bs) = case mkEmail $ TE.decodeUtf8 bs of
-    Nothing -> Left . T.pack $ "src/lib/Types.hs: Deserialized invalid email from the database, which should never happen " <> show bs
+    Nothing -> Left . T.pack $ "lib/Types.hs: Deserialized invalid email from the database, which should never happen " <> show bs
     Just email -> Right email
-  fromPersistValue x = Left . T.pack $ "src/lib/Types.hs: When trying to deserialize an `Email`, expected PersistDbSpecific, received: " <> show x
+  fromPersistValue x = Left . T.pack $ "lib/Types.hs: When trying to deserialize an `Email`, expected PersistDbSpecific, received: " <> show x
 
 instance PersistFieldSql Email where
   sqlType _ = SqlOther "email"
