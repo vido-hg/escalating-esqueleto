@@ -31,7 +31,6 @@
               pkgs.pcre
               (pkgs.haskell-language-server.override { supportedGhcVersions = [ "96" ]; })
               pkgs.postgresql
-              pkgs.fswatch
               (pkgs.ghciwatch.overrideAttrs (oldAttrs: rec {
                 patches = oldAttrs.patches or [ ] ++ [
                   (pkgs.fetchpatch {
