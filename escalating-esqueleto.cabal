@@ -8,7 +8,7 @@ author:             Mitchell Vitez
 maintainer:         mitchell@vitez.me
 
 common common-options
-  ghc-options: -Wall -fdefer-typed-holes
+  ghc-options: -Wall -fdefer-typed-holes -fdiagnostics-color=always
   build-depends: base
                , bytestring >= 0.11
                , aeson >= 2.1

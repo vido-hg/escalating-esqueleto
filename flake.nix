@@ -42,6 +42,8 @@
               }))
             ];
             shellHook = ''
+              export HSPEC_COLOR=always
+              export GHC_COLORS="always"
               export PGDATA=$PWD/.postgres
               export PGPORT=5432
               export PGHOST=/tmp

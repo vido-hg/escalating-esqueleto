@@ -1,3 +1,5 @@
+MAKEFLAGS += -s
+
 # check your exercises
 test:
 	cabal test
