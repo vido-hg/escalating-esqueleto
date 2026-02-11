@@ -22,6 +22,6 @@ watch:
 
 # close feedback loop with ghciwatch
 ghciwatch:
-	ghciwatch --watch exercises --watch lib --watch answers --watch test --enable-eval --clear --error-file ghcid.txt --test-ghci Main.main --command "cabal repl"
+	ghciwatch --watch exercises --watch lib --watch answers --watch test --enable-eval --clear --error-file ghcid.txt --test-ghci Main.main --command "cabal repl escalating-esqueleto-test"
 
 .PHONY: test watch ghciwatch
